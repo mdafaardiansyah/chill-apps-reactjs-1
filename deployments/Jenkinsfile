@@ -141,8 +141,12 @@ pipeline {
         }
         always {
             // Clean up Docker images to save space
-            sh "docker rmi ${DOCKER_IMAGE}:${IMAGE_TAG} || true"
-            sh "docker rmi ${DOCKER_IMAGE}:latest || true"
+            withEnv(["DOCKER_IMG=${DOCKER_IMAGE}", "IMG_TAG=${IMAGE_TAG}"]) {
+                sh '''
+                    docker rmi $DOCKER_IMG:$IMG_TAG || true
+                    docker rmi $DOCKER_IMG:latest || true
+                '''
+            }
         }
     }
 }
