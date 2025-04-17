@@ -76,21 +76,30 @@ pipeline {
             }
         }
         
+
         stage('Deploy') {
             steps {
                 // Connect to your server and deploy
                 sshagent(['deploy-server']) {
-                    sh """
-                        ssh ${USER_IP}@${IP_SERVER} "mkdir -p /opt/chill-movie-apps"
-                        scp deployments/docker-compose.prod.yml ${USER_IP}@${IP_SERVER}:/opt/chill-movie-apps/docker-compose.yml
-                        scp deployments/nginx-cloudflare.conf ${USER_IP}@${IP_SERVER}:/opt/chill-movie-apps/nginx-cloudflare.conf
-                        ssh ${USER_IP}@${IP_SERVER} "cd /opt/chill-movie-apps && \
-                        mkdir -p ssl && \
-                        docker-compose down && \
-                        docker pull ${DOCKER_IMAGE}:${IMAGE_TAG} && \
-                        docker tag ${DOCKER_IMAGE}:${IMAGE_TAG} ${DOCKER_IMAGE}:latest && \
-                        docker-compose up -d"
-                    """
+                    // Use withEnv to avoid Groovy String interpolation security warnings
+                    withEnv(["SERVER_IP=${IP_SERVER}", "SERVER_USER=${USER_IP}"]) {
+                        sh '''
+                            # Create directory on server
+                            ssh -o StrictHostKeyChecking=no $SERVER_USER@$SERVER_IP "mkdir -p /opt/chill-movie-apps"
+                            
+                            # Copy configuration files
+                            scp -o StrictHostKeyChecking=no deployments/docker-compose.prod.yml $SERVER_USER@$SERVER_IP:/opt/chill-movie-apps/docker-compose.yml
+                            scp -o StrictHostKeyChecking=no deployments/nginx-cloudflare.conf $SERVER_USER@$SERVER_IP:/opt/chill-movie-apps/nginx-cloudflare.conf
+                            
+                            # Deploy application
+                            ssh -o StrictHostKeyChecking=no $SERVER_USER@$SERVER_IP "cd /opt/chill-movie-apps && \
+                            mkdir -p ssl && \
+                            docker-compose down && \
+                            docker pull ${DOCKER_IMAGE}:${IMAGE_TAG} && \
+                            docker tag ${DOCKER_IMAGE}:${IMAGE_TAG} ${DOCKER_IMAGE}:latest && \
+                            docker-compose up -d"
+                        '''
+                    }
                 }
             }
         }
