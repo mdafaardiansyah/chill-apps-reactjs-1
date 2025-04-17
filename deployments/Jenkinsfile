@@ -99,10 +99,10 @@ pipeline {
                             # Deploy application
                             ssh -o StrictHostKeyChecking=no $SERVER_USER@$SERVER_IP "cd /opt/chill-movie-apps && \
                             mkdir -p ssl && \
-                            docker-compose down && \
+                            docker compose down && \
                             docker pull $DOCKER_IMG:$IMG_TAG && \
                             docker tag $DOCKER_IMG:$IMG_TAG $DOCKER_IMG:latest && \
-                            docker-compose up -d"
+                            docker compose up -d"
                         '''
                     }
                 }
