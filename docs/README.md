@@ -1,6 +1,6 @@
 # Chill Movie Apps
 
-![Chill Movie Apps Logo](/assets/images/logo/logo.png)
+![Chill Movie Apps Logo](/assets/images/logo/Logo.png)
 
 ## Deskripsi
 
