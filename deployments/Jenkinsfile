@@ -80,7 +80,7 @@ pipeline {
         stage('Deploy') {
             steps {
                 // Connect to your server and deploy
-                sshagent(['deploy-server']) {
+                sshagent(credentials: ['deploy-server'], ignoreMissing: true) {
                     // Use withEnv to avoid Groovy String interpolation security warnings
                     withEnv([
                         "SERVER_IP=${IP_SERVER}", 
@@ -141,7 +141,11 @@ pipeline {
         }
         always {
             // Clean up Docker images to save space
-            withEnv(["DOCKER_IMG=${DOCKER_IMAGE}", "IMG_TAG=${IMAGE_TAG}"]) {
+            // Use withEnv to avoid Groovy String interpolation security warnings
+            withEnv([
+                "DOCKER_IMG=${DOCKER_IMAGE}", 
+                "IMG_TAG=${IMAGE_TAG}"
+            ]) {
                 sh '''
                     docker rmi $DOCKER_IMG:$IMG_TAG || true
                     docker rmi $DOCKER_IMG:latest || true
