@@ -82,7 +82,12 @@ pipeline {
                 // Connect to your server and deploy
                 sshagent(['deploy-server']) {
                     // Use withEnv to avoid Groovy String interpolation security warnings
-                    withEnv(["SERVER_IP=${IP_SERVER}", "SERVER_USER=${USER_IP}"]) {
+                    withEnv([
+                        "SERVER_IP=${IP_SERVER}", 
+                        "SERVER_USER=${USER_IP}",
+                        "DOCKER_IMG=${DOCKER_IMAGE}",
+                        "IMG_TAG=${IMAGE_TAG}"
+                    ]) {
                         sh '''
                             # Create directory on server
                             ssh -o StrictHostKeyChecking=no $SERVER_USER@$SERVER_IP "mkdir -p /opt/chill-movie-apps"
@@ -95,8 +100,8 @@ pipeline {
                             ssh -o StrictHostKeyChecking=no $SERVER_USER@$SERVER_IP "cd /opt/chill-movie-apps && \
                             mkdir -p ssl && \
                             docker-compose down && \
-                            docker pull ${DOCKER_IMAGE}:${IMAGE_TAG} && \
-                            docker tag ${DOCKER_IMAGE}:${IMAGE_TAG} ${DOCKER_IMAGE}:latest && \
+                            docker pull $DOCKER_IMG:$IMG_TAG && \
+                            docker tag $DOCKER_IMG:$IMG_TAG $DOCKER_IMG:latest && \
                             docker-compose up -d"
                         '''
                     }
