@@ -1,0 +1,19 @@
+version: '3.8'
+
+services:
+  chill-movie-app:
+    image: ardidafa/chill-movie-apps:latest
+    container_name: chill-movie-app
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./ssl:/etc/nginx/ssl
+      - ./nginx-cloudflare.conf:/etc/nginx/conf.d/default.conf
+    networks:
+      - web
+
+networks:
+  web:
+    driver: bridge
