@@ -89,18 +89,22 @@ pipeline {
                         "IMG_TAG=${IMAGE_TAG}"
                     ]) {
                         sh '''
-                            # Gunakan SSH langsung dengan kunci privat tanpa ssh-agent
-                            # Ini menghindari masalah passphrase interaktif
+                            # Tampilkan informasi kunci SSH untuk debugging (tanpa menampilkan isi kunci)
+                            ls -la "$SSH_KEY"
                             
+                            # Atur izin kunci SSH yang benar
+                            chmod 600 "$SSH_KEY"
+                            
+                            # Gunakan SSH dengan opsi verbose untuk debugging
                             # Create directory on server
-                            ssh -o StrictHostKeyChecking=no -i "$SSH_KEY" $SERVER_USER@$SERVER_IP "mkdir -p /opt/chill-movie-apps"
+                            ssh -v -o StrictHostKeyChecking=no -o IdentitiesOnly=yes -o PreferredAuthentications=publickey -i "$SSH_KEY" $SERVER_USER@$SERVER_IP "mkdir -p /opt/chill-movie-apps"
                             
                             # Copy configuration files
-                            scp -o StrictHostKeyChecking=no -i "$SSH_KEY" deployments/docker-compose.prod.yml $SERVER_USER@$SERVER_IP:/opt/chill-movie-apps/docker-compose.yml
-                            scp -o StrictHostKeyChecking=no -i "$SSH_KEY" deployments/nginx-cloudflare.conf $SERVER_USER@$SERVER_IP:/opt/chill-movie-apps/nginx-cloudflare.conf
+                            scp -v -o StrictHostKeyChecking=no -o IdentitiesOnly=yes -o PreferredAuthentications=publickey -i "$SSH_KEY" deployments/docker-compose.prod.yml $SERVER_USER@$SERVER_IP:/opt/chill-movie-apps/docker-compose.yml
+                            scp -v -o StrictHostKeyChecking=no -o IdentitiesOnly=yes -o PreferredAuthentications=publickey -i "$SSH_KEY" deployments/nginx-cloudflare.conf $SERVER_USER@$SERVER_IP:/opt/chill-movie-apps/nginx-cloudflare.conf
                             
                             # Deploy application
-                            ssh -o StrictHostKeyChecking=no -i "$SSH_KEY" $SERVER_USER@$SERVER_IP "cd /opt/chill-movie-apps && \
+                            ssh -v -o StrictHostKeyChecking=no -o IdentitiesOnly=yes -o PreferredAuthentications=publickey -i "$SSH_KEY" $SERVER_USER@$SERVER_IP "cd /opt/chill-movie-apps && \
                             mkdir -p ssl && \
                             docker compose down && \
                             docker pull $DOCKER_IMG:$IMG_TAG && \
