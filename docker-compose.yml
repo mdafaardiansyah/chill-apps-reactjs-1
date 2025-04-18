@@ -7,8 +7,6 @@ services:
     restart: unless-stopped
     ports:
       - "3001:80" # Ganti 80 di sini jika perlu, tetapi pastikan ini sesuai dengan pengaturan Nginx
-    volumes:
-      - ./nginx-cloudflare.conf:/etc/nginx/conf.d/default.conf
     networks:
       - web
 
