@@ -95,7 +95,7 @@ pipeline {
                             # Atur izin kunci SSH yang benar
                             chmod 600 "$SSH_KEY"
                             
-                            # Gunakan SSH dengan opsi verbose untuk debugging's
+                            # Gunakan SSH dengan opsi verbose untuk debugging
                             # Create directory on server
                             ssh -v -o StrictHostKeyChecking=no -i "$SSH_KEY" $SERVER_USER@$SERVER_IP "mkdir -p /var/www/chill-movie-apps"
                             
@@ -107,16 +107,16 @@ pipeline {
                             fi"
                             
                             # Copy configuration files
-                            scp -v -o StrictHostKeyChecking=no -i "$SSH_KEY" deployments/docker-compose.prod.yml $SERVER_USER@$SERVER_IP:/var/www/chill-movie-apps/docker-compose.yml
-                            scp -v -o StrictHostKeyChecking=no -i "$SSH_KEY" deployments/nginx-cloudflare.conf $SERVER_USER@$SERVER_IP:/var/www/chill-movie-apps/nginx-cloudflare.conf
+                            # scp -v -o StrictHostKeyChecking=no -i "$SSH_KEY" deployments/docker-compose.prod.yml $SERVER_USER@$SERVER_IP:/var/www/chill-movie-apps/docker-compose.yml
+                            # scp -v -o StrictHostKeyChecking=no -i "$SSH_KEY" deployments/nginx-cloudflare.conf $SERVER_USER@$SERVER_IP:/var/www/chill-movie-apps/nginx-cloudflare.conf
                             
                             # Deploy application
                             ssh -v -o StrictHostKeyChecking=no -i "$SSH_KEY" $SERVER_USER@$SERVER_IP "cd /var/www/chill-movie-apps && \
                             mkdir -p ssl && \
-                            docker compose -f docker-compose.prod.yml down && \
+                            docker -f docker-compose.prod.yml compose down && \
                             docker pull $DOCKER_IMG:$IMG_TAG && \
                             docker tag $DOCKER_IMG:$IMG_TAG $DOCKER_IMG:latest && \
-                            docker compose -f docker-compose.prod.yml up -d"
+                            docker -f docker-compose.prod.yml compose up -d"
                         '''
                     }
                 }
