@@ -79,8 +79,8 @@ pipeline {
 
         stage('Deploy') {
             steps {
-                // Connect to your server and deploy
-                sshagent(credentials: ['deploy-server'], ignoreMissing: true) {
+                // Connect to your server and deploy using withCredentials instead of sshagent
+                withCredentials([sshUserPrivateKey(credentialsId: 'deploy-server', keyFileVariable: 'SSH_KEY')]) {
                     // Use withEnv to avoid Groovy String interpolation security warnings
                     withEnv([
                         "SERVER_IP=${IP_SERVER}", 
@@ -89,6 +89,11 @@ pipeline {
                         "IMG_TAG=${IMAGE_TAG}"
                     ]) {
                         sh '''
+                            # Setup SSH agent manually
+                            eval `ssh-agent -s`
+                            trap "ssh-agent -k" EXIT
+                            ssh-add "$SSH_KEY"
+                            
                             # Create directory on server
                             ssh -o StrictHostKeyChecking=no $SERVER_USER@$SERVER_IP "mkdir -p /opt/chill-movie-apps"
                             
