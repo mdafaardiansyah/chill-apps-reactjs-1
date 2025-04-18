@@ -6,7 +6,7 @@ services:
     container_name: chill-movie-app
     restart: unless-stopped
     ports:
-      - "3000:80" # Ganti 80 di sini jika perlu, tetapi pastikan ini sesuai dengan pengaturan Nginx
+      - "3001:80" # Ganti 80 di sini jika perlu, tetapi pastikan ini sesuai dengan pengaturan Nginx
     volumes:
       - ./nginx-cloudflare.conf:/etc/nginx/conf.d/default.conf
     networks:
