@@ -113,10 +113,10 @@ pipeline {
                             # Deploy application
                             ssh -v -o StrictHostKeyChecking=no -i "$SSH_KEY" $SERVER_USER@$SERVER_IP "cd /var/www/chill-movie-apps && \
                             mkdir -p ssl && \
-                            docker -f docker-compose.prod.yml compose down && \
+                            docker compose down && \
                             docker pull $DOCKER_IMG:$IMG_TAG && \
                             docker tag $DOCKER_IMG:$IMG_TAG $DOCKER_IMG:latest && \
-                            docker -f docker-compose.prod.yml compose up -d"
+                            docker compose up -d"
                         '''
                     }
                 }
