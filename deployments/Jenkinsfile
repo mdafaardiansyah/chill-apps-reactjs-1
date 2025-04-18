@@ -89,20 +89,18 @@ pipeline {
                         "IMG_TAG=${IMAGE_TAG}"
                     ]) {
                         sh '''
-                            # Setup SSH agent manually
-                            eval `ssh-agent -s`
-                            trap "ssh-agent -k" EXIT
-                            ssh-add "$SSH_KEY"
+                            # Gunakan SSH langsung dengan kunci privat tanpa ssh-agent
+                            # Ini menghindari masalah passphrase interaktif
                             
                             # Create directory on server
-                            ssh -o StrictHostKeyChecking=no $SERVER_USER@$SERVER_IP "mkdir -p /opt/chill-movie-apps"
+                            ssh -o StrictHostKeyChecking=no -i "$SSH_KEY" $SERVER_USER@$SERVER_IP "mkdir -p /opt/chill-movie-apps"
                             
                             # Copy configuration files
-                            scp -o StrictHostKeyChecking=no deployments/docker-compose.prod.yml $SERVER_USER@$SERVER_IP:/opt/chill-movie-apps/docker-compose.yml
-                            scp -o StrictHostKeyChecking=no deployments/nginx-cloudflare.conf $SERVER_USER@$SERVER_IP:/opt/chill-movie-apps/nginx-cloudflare.conf
+                            scp -o StrictHostKeyChecking=no -i "$SSH_KEY" deployments/docker-compose.prod.yml $SERVER_USER@$SERVER_IP:/opt/chill-movie-apps/docker-compose.yml
+                            scp -o StrictHostKeyChecking=no -i "$SSH_KEY" deployments/nginx-cloudflare.conf $SERVER_USER@$SERVER_IP:/opt/chill-movie-apps/nginx-cloudflare.conf
                             
                             # Deploy application
-                            ssh -o StrictHostKeyChecking=no $SERVER_USER@$SERVER_IP "cd /opt/chill-movie-apps && \
+                            ssh -o StrictHostKeyChecking=no -i "$SSH_KEY" $SERVER_USER@$SERVER_IP "cd /opt/chill-movie-apps && \
                             mkdir -p ssl && \
                             docker compose down && \
                             docker pull $DOCKER_IMG:$IMG_TAG && \
