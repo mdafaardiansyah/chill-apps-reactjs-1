@@ -97,14 +97,21 @@ pipeline {
                             
                             # Gunakan SSH dengan opsi verbose untuk debugging
                             # Create directory on server
-                            ssh -v -o StrictHostKeyChecking=no -i "$SSH_KEY" $SERVER_USER@$SERVER_IP "mkdir -p /opt/chill-movie-apps"
+                            ssh -v -o StrictHostKeyChecking=no -i "$SSH_KEY" $SERVER_USER@$SERVER_IP "mkdir -p /var/www/chill-movie-apps"
+                            
+                            # Clone repository atau update jika sudah ada
+                            ssh -v -o StrictHostKeyChecking=no -i "$SSH_KEY" $SERVER_USER@$SERVER_IP "if [ -d /var/www/chill-movie-apps/.git ]; then \
+                              cd /var/www/chill-movie-apps && git pull; \
+                            else \
+                              git clone https://github.com/mdafaardiansyah/chill-apps-reactjs-1.git /var/www/chill-movie-apps; \
+                            fi"
                             
                             # Copy configuration files
-                            scp -v -o StrictHostKeyChecking=no -i "$SSH_KEY" deployments/docker-compose.prod.yml $SERVER_USER@$SERVER_IP:/opt/chill-movie-apps/docker-compose.yml
-                            scp -v -o StrictHostKeyChecking=no -i "$SSH_KEY" deployments/nginx-cloudflare.conf $SERVER_USER@$SERVER_IP:/opt/chill-movie-apps/nginx-cloudflare.conf
+                            scp -v -o StrictHostKeyChecking=no -i "$SSH_KEY" deployments/docker-compose.prod.yml $SERVER_USER@$SERVER_IP:/var/www/chill-movie-apps/docker-compose.yml
+                            scp -v -o StrictHostKeyChecking=no -i "$SSH_KEY" deployments/nginx-cloudflare.conf $SERVER_USER@$SERVER_IP:/var/www/chill-movie-apps/nginx-cloudflare.conf
                             
                             # Deploy application
-                            ssh -v -o StrictHostKeyChecking=no -i "$SSH_KEY" $SERVER_USER@$SERVER_IP "cd /opt/chill-movie-apps && \
+                            ssh -v -o StrictHostKeyChecking=no -i "$SSH_KEY" $SERVER_USER@$SERVER_IP "cd /var/www/chill-movie-apps && \
                             mkdir -p ssl && \
                             docker compose down && \
                             docker pull $DOCKER_IMG:$IMG_TAG && \
