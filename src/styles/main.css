@@ -57,14 +57,14 @@ ul {
     display: flex;
     justify-content: center;
     align-items: center;
-    background-image: url('/assets/images/backgrounds/BackgroundLogin.jpg');
+    background-image: url('/src/assets/images/backgrounds/BackgroundLogin.jpg');
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
 }
 
 .register-container {
-    background-image: url('/assets/images/backgrounds/BackgroundRegister.jpg');
+    background-image: url('/src/assets/images/backgrounds/BackgroundRegister.jpg');
 }
 
 .auth-card {

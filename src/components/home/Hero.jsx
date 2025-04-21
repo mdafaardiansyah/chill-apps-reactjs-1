@@ -14,7 +14,7 @@ const Hero = () => {
 
   return (
     <section className="hero" style={{ 
-      backgroundImage: "url('/assets/images/hero/duty-after-school.png')",
+      backgroundImage: "url('/src/assets/images/hero/duty-after-school.png')",
       backgroundSize: isMobile ? '160% auto' : 'cover',
       backgroundPosition: isMobile ? '65% center' : 'center'
     }}>
@@ -28,7 +28,7 @@ const Hero = () => {
           <div className="hero-buttons">
             <button className="btn-third">Mulai</button>
             <button className="btn btn-secondary">
-              <img src="/assets/images/icons/information-outline.png" alt="Info" />
+              <img src="/src/assets/images/icons/information-outline.png" alt="Info" />
               Selengkapnya
             </button>
             <span className="age-rating">18+</span>
@@ -36,7 +36,7 @@ const Hero = () => {
         </div>
         <div className="hero-controls">
           <button className="btn-audio">
-            <img src="/assets/images/icons/volume-off.png" alt="Volume" />
+            <img src="/src/assets/images/icons/volume-off.png" alt="Volume" />
           </button>
         </div>
       </div>

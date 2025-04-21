@@ -35,7 +35,7 @@ const Footer = () => {
       }}>
         <div className="footer-brand" style={{ marginBottom: '20px' }}>
           <Link to="/home" className="footer-logo" style={{ display: 'block', marginBottom: '15px' }}>
-            <img src="/assets/images/logo/Logo.png" alt="Chill Logo" style={{ height: '40px' }} />
+            <img src="/src/assets/images/logo/Logo.png" alt="Chill Logo" style={{ height: '40px' }} />
           </Link>
           <p style={{ fontSize: '14px', color: '#9E9E9E', marginTop: '10px' }}>©2023 Chill All Rights Reserved.</p>
         </div>
@@ -52,7 +52,7 @@ const Footer = () => {
               <h3 style={{ fontSize: '16px', fontWeight: '600', margin: 0 }}>Genre</h3>
               {isMobile && (
                 <img 
-                  src="/assets/images/icons/arrow-right.png" 
+                  src="/src/assets/images/icons/arrow-right.png" 
                   alt="Toggle" 
                   style={{ 
                     width: '16px', 
@@ -102,7 +102,7 @@ const Footer = () => {
               <h3 style={{ fontSize: '16px', fontWeight: '600', margin: 0 }}>Bantuan</h3>
               {isMobile && (
                 <img 
-                  src="/assets/images/icons/arrow-right.png" 
+                  src="/src/assets/images/icons/arrow-right.png" 
                   alt="Toggle" 
                   style={{ 
                     width: '16px', 

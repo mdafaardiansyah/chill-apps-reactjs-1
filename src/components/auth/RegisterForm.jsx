@@ -23,7 +23,7 @@ const RegisterForm = () => {
       <div className="auth-card">
         {/* Logo */}
         <div className="logo-container">
-          <img src="/assets/images/logo/Logo.png" alt="Chill Logo" className="logo" />
+          <img src="/src/assets/images/logo/Logo.png" alt="Chill Logo" className="logo" />
         </div>
 
         {/* Form Header */}
@@ -92,7 +92,7 @@ const RegisterForm = () => {
 
           {/* Google Sign In */}
           <button type="button" className="btn-google">
-            <img src="/assets/images/icons/google.png" alt="Google" className="google-icon" />
+            <img src="/src/assets/images/icons/google.png" alt="Google" className="google-icon" />
             Daftar dengan Google
           </button>
         </form>
