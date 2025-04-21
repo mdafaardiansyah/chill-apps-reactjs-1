@@ -1,6 +1,14 @@
 import { useState, useRef, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 
+// Import assets
+import logoImage from '/src/assets/images/logo/Logo.png';
+import avatarImage from '/src/assets/images/hero/Avatar.png';
+import arrowDownIcon from '/src/assets/images/icons/KeyboardArrowDown.png';
+import accountIcon from '/src/assets/images/icons/account.png';
+import starIcon from '/src/assets/images/icons/star.png';
+import logoutIcon from '/src/assets/images/icons/logout-variant.png';
+
 const Header = () => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const navigate = useNavigate();
@@ -36,7 +44,7 @@ const Header = () => {
       <div className="header-content">
         <div className="logo-nav">
           <Link to="/home" className="logo">
-            <img src="/src/assets/images/logo/Logo.png" alt="Chill Logo" />
+            <img src={logoImage} alt="Chill Logo" />
           </Link>
           <nav className="main-nav">
             <ul>
@@ -49,9 +57,9 @@ const Header = () => {
 
         <div className="user-profile" ref={dropdownRef}>
           <div onClick={toggleDropdown} style={{ display: 'flex', alignItems: 'center', cursor: 'pointer' }}>
-            <img src="/src/assets/images/hero/Avatar.png" alt="Profile" className="avatar" />
+            <img src={avatarImage} alt="Profile" className="avatar" />
             <img 
-              src="/src/assets/images/icons/KeyboardArrowDown.png" 
+              src={arrowDownIcon} 
               alt="Dropdown" 
               className={`arrow-down ${isDropdownOpen ? 'rotate' : ''}`}
               style={{ transform: isDropdownOpen ? 'rotate(180deg)' : 'rotate(0deg)', transition: 'transform 0.3s ease' }}
@@ -77,7 +85,7 @@ const Header = () => {
                 textDecoration: 'none',
                 gap: '10px'
               }}>
-                <img src="/src/assets/images/icons/account.png" alt="Profile" />
+                <img src={accountIcon} alt="Profile" />
                 <span>Profil Saya</span>
               </Link>
               <Link to="#" className="dropdown-item" style={{
@@ -88,7 +96,7 @@ const Header = () => {
                 textDecoration: 'none',
                 gap: '10px'
               }}>
-                <img src="/src/assets/images/icons/star.png" alt="Premium" />
+                <img src={starIcon} alt="Premium" />
                 <span>Ubah Premium</span>
               </Link>
               <button onClick={handleLogout} className="dropdown-item logout-button" style={{
@@ -103,7 +111,7 @@ const Header = () => {
                 cursor: 'pointer',
                 gap: '10px'
               }}>
-                <img src="/src/assets/images/icons/logout-variant.png" alt="Logout" />
+                <img src={logoutIcon} alt="Logout" />
                 <span>Keluar</span>
               </button>
             </div>
