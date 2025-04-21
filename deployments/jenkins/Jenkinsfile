@@ -155,8 +155,6 @@ pipeline {
         success { 
             script { 
                 def changes = getChanges() 
-                def jenkinsVersion = Jenkins.instance.getVersion().toString() 
-                def discordNotifierVersion = Jenkins.instance.pluginManager.getPlugin("discord-notifier").getVersion() 
                 discordSend ( 
                     webhookURL: DISCORD_WEBHOOK, 
                     title: "Deploy Success !", 
@@ -171,7 +169,7 @@ pipeline {
                     No artifacts saved. 
  
                     """, 
-                    footer: "Jenkins v${jenkinsVersion}              Discord Notifier v${discordNotifierVersion}", 
+                    footer: "Jenkins Pipeline", 
                     link: env.BUILD_URL, 
                     result: currentBuild.currentResult, 
                     thumbnail: " `https://jenkins.io/images/logos/jenkins/jenkins.png` " 
@@ -181,8 +179,6 @@ pipeline {
         failure { 
             script { 
                 def changes = getChanges() 
-                def jenkinsVersion = Jenkins.instance.getVersion().toString() 
-                def discordNotifierVersion = Jenkins.instance.pluginManager.getPlugin("discord-notifier").getVersion() 
                 discordSend ( 
                     webhookURL: DISCORD_WEBHOOK, 
                     title: "Deploy Failed !", 
@@ -197,7 +193,7 @@ pipeline {
                     No artifacts saved. 
  
                     """, 
-                    footer: "Jenkins v${jenkinsVersion}                Discord Notifier v${discordNotifierVersion}", 
+                    footer: "Jenkins Pipeline", 
                     link: env.BUILD_URL, 
                     result: currentBuild.currentResult, 
                     thumbnail: " `https://jenkins.io/images/logos/jenkins/jenkins.png` " 
