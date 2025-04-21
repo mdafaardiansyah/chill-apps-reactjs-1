@@ -108,12 +108,7 @@ pipeline {
                             docker pull $DOCKER_IMG:$IMG_TAG && \
                             docker tag $DOCKER_IMG:$IMG_TAG $DOCKER_IMG:latest && \
                             docker compose up -d && \
-                            \
-                            # Setup nginx config pada host
-                            sudo cp nginx-site.conf /etc/nginx/sites-available/hsbi1b-chill.glanze.site && \
-                            sudo ln -sf /etc/nginx/sites-available/hsbi1b-chill.glanze.site /etc/nginx/sites-enabled/ && \
-                            sudo nginx -t && \
-                            sudo systemctl restart nginx"
+                            
                         '''
                     }
                 }
