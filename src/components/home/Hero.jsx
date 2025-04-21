@@ -1,4 +1,7 @@
 import React, { useState, useEffect } from 'react';
+import heroBackground from '/src/assets/images/hero/duty-after-school.png';
+import infoIcon from '/src/assets/images/icons/information-outline.png';
+import volumeIcon from '/src/assets/images/icons/volume-off.png';
 
 const Hero = () => {
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
@@ -14,7 +17,7 @@ const Hero = () => {
 
   return (
     <section className="hero" style={{ 
-      backgroundImage: "url('/src/assets/images/hero/duty-after-school.png')",
+      backgroundImage: `url(${heroBackground})`,
       backgroundSize: isMobile ? '160% auto' : 'cover',
       backgroundPosition: isMobile ? '65% center' : 'center'
     }}>
@@ -28,7 +31,7 @@ const Hero = () => {
           <div className="hero-buttons">
             <button className="btn-third">Mulai</button>
             <button className="btn btn-secondary">
-              <img src="/src/assets/images/icons/information-outline.png" alt="Info" />
+              <img src={infoIcon} alt="Info" />
               Selengkapnya
             </button>
             <span className="age-rating">18+</span>
@@ -36,7 +39,7 @@ const Hero = () => {
         </div>
         <div className="hero-controls">
           <button className="btn-audio">
-            <img src="/src/assets/images/icons/volume-off.png" alt="Volume" />
+            <img src={volumeIcon} alt="Volume" />
           </button>
         </div>
       </div>

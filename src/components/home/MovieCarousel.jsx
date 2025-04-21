@@ -1,4 +1,6 @@
 import React, { useRef } from 'react';
+import arrowLeftIcon from '/src/assets/images/icons/arrow-left.png';
+import arrowRightIcon from '/src/assets/images/icons/arrow-right.png';
 
 const MovieCarousel = ({ title, type = 'landscape', movies }) => {
   const carouselRef = useRef(null);
@@ -28,7 +30,7 @@ const MovieCarousel = ({ title, type = 'landscape', movies }) => {
 
         <div className="scroll-container" style={{ position: 'relative', width: '100%', overflow: 'hidden' }}>
           <div className="scroll-arrow scroll-arrow-left" onClick={scrollLeft} style={{ position: 'absolute', left: '0', zIndex: 10, cursor: 'pointer', padding: '10px', backgroundColor: 'rgba(31, 29, 43, 0.7)', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', width: '40px', height: '40px', top: '50%', transform: 'translateY(-50%)' }}>
-            <img src="/src/assets/images/icons/arrow-left.png" alt="Scroll Left" style={{ width: '24px', height: '24px' }} />
+            <img src={arrowLeftIcon} alt="Scroll Left" style={{ width: '24px', height: '24px' }} />
           </div>
 
           <div className="movie-carousel" ref={carouselRef} style={{ display: 'flex', overflowX: 'auto', scrollBehavior: 'smooth', width: '100%', scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
@@ -58,7 +60,7 @@ const MovieCarousel = ({ title, type = 'landscape', movies }) => {
           </div>
 
           <div className="scroll-arrow scroll-arrow-right" onClick={scrollRight} style={{ position: 'absolute', right: '0', zIndex: 10, cursor: 'pointer', padding: '10px', backgroundColor: 'rgba(31, 29, 43, 0.7)', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', width: '40px', height: '40px', top: '50%', transform: 'translateY(-50%)' }}>
-            <img src="/src/assets/images/icons/arrow-right.png" alt="Scroll Right" style={{ width: '24px', height: '24px' }} />
+            <img src={arrowRightIcon} alt="Scroll Right" style={{ width: '24px', height: '24px' }} />
           </div>
         </div>
       </div>
