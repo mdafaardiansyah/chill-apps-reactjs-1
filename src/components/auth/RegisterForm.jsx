@@ -1,6 +1,11 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 
+// Import assets
+import logoImage from '/src/assets/images/logo/Logo.png';
+import googleIcon from '/src/assets/images/icons/google.png';
+import { registerBackground } from '../../styles/auth-backgrounds';
+
 const RegisterForm = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
@@ -19,11 +24,11 @@ const RegisterForm = () => {
   };
 
   return (
-    <div className="auth-container register-container">
+    <div className="auth-container register-container" style={{ backgroundImage: `url(${registerBackground})` }}>
       <div className="auth-card">
         {/* Logo */}
         <div className="logo-container">
-          <img src="/src/assets/images/logo/Logo.png" alt="Chill Logo" className="logo" />
+          <img src={logoImage} alt="Chill Logo" className="logo" />
         </div>
 
         {/* Form Header */}
@@ -92,7 +97,7 @@ const RegisterForm = () => {
 
           {/* Google Sign In */}
           <button type="button" className="btn-google">
-            <img src="/src/assets/images/icons/google.png" alt="Google" className="google-icon" />
+            <img src={googleIcon} alt="Google" className="google-icon" />
             Daftar dengan Google
           </button>
         </form>
