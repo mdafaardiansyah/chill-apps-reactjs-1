@@ -107,8 +107,7 @@ pipeline {
                             docker compose down && \
                             docker pull $DOCKER_IMG:$IMG_TAG && \
                             docker tag $DOCKER_IMG:$IMG_TAG $DOCKER_IMG:latest && \
-                            docker compose up -d && \
-                            
+                            docker compose up -d"
                         '''
                     }
                 }
