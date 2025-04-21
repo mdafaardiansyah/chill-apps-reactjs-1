@@ -26,7 +26,6 @@ pipeline {
             steps {
                 checkout scm
                 script {
-                    // Send Discord notification for build start
                     discordSend(
                         webhookURL: DISCORD_WEBHOOK,
                         title: "BUILD STARTED: ${env.JOB_NAME} #${env.BUILD_NUMBER}",
@@ -64,7 +63,8 @@ pipeline {
         
         stage('Docker Build') {
             steps {
-                sh "docker build -t ${DOCKER_IMAGE}:${IMAGE_TAG} -t ${DOCKER_IMAGE}:latest -f deployments/Dockerfile ."
+                // Perhatikan path Dockerfile yang sudah diubah
+                sh "docker build -t ${DOCKER_IMAGE}:${IMAGE_TAG} -t ${DOCKER_IMAGE}:latest -f deployments/docker/Dockerfile ."
             }
         }
         
@@ -76,12 +76,9 @@ pipeline {
             }
         }
         
-
         stage('Deploy') {
             steps {
-                // Connect to your server and deploy using withCredentials instead of sshagent
                 withCredentials([sshUserPrivateKey(credentialsId: 'deploy-server', keyFileVariable: 'SSH_KEY')]) {
-                    // Use withEnv to avoid Groovy String interpolation security warnings
                     withEnv([
                         "SERVER_IP=${IP_SERVER}", 
                         "SERVER_USER=${USER_IP}",
@@ -89,34 +86,34 @@ pipeline {
                         "IMG_TAG=${IMAGE_TAG}"
                     ]) {
                         sh '''
-                            # Tampilkan informasi kunci SSH untuk debugging (tanpa menampilkan isi kunci)
-                            ls -la "$SSH_KEY"
-                            
-                            # Atur izin kunci SSH yang benar
+                            # Set correct SSH key permissions
                             chmod 600 "$SSH_KEY"
                             
-                            # Gunakan SSH dengan opsi verbose untuk debugging
                             # Create directory on server
-                            ssh -v -o StrictHostKeyChecking=no -i "$SSH_KEY" $SERVER_USER@$SERVER_IP "mkdir -p /var/www/chill-movie-apps"
+                            ssh -o StrictHostKeyChecking=no -i "$SSH_KEY" $SERVER_USER@$SERVER_IP "mkdir -p /var/www/chill-movie-apps"
                             
-                            # Clone repository atau update jika sudah ada
-                            ssh -v -o StrictHostKeyChecking=no -i "$SSH_KEY" $SERVER_USER@$SERVER_IP "if [ -d /var/www/chill-movie-apps/.git ]; then \
+                            # Clone or update repository
+                            ssh -o StrictHostKeyChecking=no -i "$SSH_KEY" $SERVER_USER@$SERVER_IP "if [ -d /var/www/chill-movie-apps/.git ]; then \
                               cd /var/www/chill-movie-apps && git pull; \
                             else \
                               git clone https://github.com/mdafaardiansyah/chill-apps-reactjs-1.git /var/www/chill-movie-apps; \
                             fi"
                             
                             # Copy configuration files
-                            # scp -v -o StrictHostKeyChecking=no -i "$SSH_KEY" deployments/docker-compose.prod.yml $SERVER_USER@$SERVER_IP:/var/www/chill-movie-apps/docker-compose.yml
-                            # scp -v -o StrictHostKeyChecking=no -i "$SSH_KEY" deployments/nginx-cloudflare.conf $SERVER_USER@$SERVER_IP:/var/www/chill-movie-apps/nginx-cloudflare.conf
+                            scp -o StrictHostKeyChecking=no -i "$SSH_KEY" deployments/nginx/site.conf $SERVER_USER@$SERVER_IP:/var/www/chill-movie-apps/nginx-site.conf
                             
-                            # Deploy application
-                            ssh -v -o StrictHostKeyChecking=no -i "$SSH_KEY" $SERVER_USER@$SERVER_IP "cd /var/www/chill-movie-apps && \
-                            mkdir -p ssl && \
+                            # Deploy application with correct nginx configuration
+                            ssh -o StrictHostKeyChecking=no -i "$SSH_KEY" $SERVER_USER@$SERVER_IP "cd /var/www/chill-movie-apps && \
                             docker compose down && \
                             docker pull $DOCKER_IMG:$IMG_TAG && \
                             docker tag $DOCKER_IMG:$IMG_TAG $DOCKER_IMG:latest && \
-                            docker compose up -d"
+                            docker compose up -d && \
+                            \
+                            # Setup nginx config pada host
+                            sudo cp nginx-site.conf /etc/nginx/sites-available/hsbi1b-chill.glanze.site && \
+                            sudo ln -sf /etc/nginx/sites-available/hsbi1b-chill.glanze.site /etc/nginx/sites-enabled/ && \
+                            sudo nginx -t && \
+                            sudo systemctl reload nginx"
                         '''
                     }
                 }
@@ -129,7 +126,7 @@ pipeline {
                 sh 'sleep 30'
 
                 // Basic health check
-                sh 'curl -k -f -s --retry 10 --retry-connrefused --retry-delay 5 https://hsbi1b.chill.glanze.site || true'
+                sh 'curl -k -f -s --retry 10 --retry-connrefused --retry-delay 5 https://hsbi1b-chill.glanze.site || true'
             }
         }
     }
@@ -154,8 +151,7 @@ pipeline {
             )
         }
         always {
-            // Clean up Docker images to save space
-            // Use withEnv to avoid Groovy String interpolation security warnings
+            // Clean up Docker images
             withEnv([
                 "DOCKER_IMG=${DOCKER_IMAGE}", 
                 "IMG_TAG=${IMAGE_TAG}"
