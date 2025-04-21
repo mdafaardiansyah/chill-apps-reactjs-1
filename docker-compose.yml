@@ -1,0 +1,23 @@
+version: '3.8'
+
+services:
+  chill-movie-app:
+    image: ardidafa/chill-movie-apps:latest
+    container_name: chill-movie-app
+    restart: unless-stopped
+    ports:
+      - "3001:80"  # Menghindari konflik dengan Nginx di host yang menggunakan port 80
+    networks:
+      - web
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://localhost:80"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+    environment:
+      - NODE_ENV=production
+
+networks:
+  web:
+    driver: bridge
